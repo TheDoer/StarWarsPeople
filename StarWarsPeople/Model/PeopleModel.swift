@@ -7,8 +7,8 @@
 
 import Foundation
 
-// MARK: - Gemba
-struct Gemba: Codable {
+
+struct APIResponse: Codable {
     let results: [Result]?
 
     enum CodingKeys: String, CodingKey {

@@ -11,6 +11,12 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        APICaller.shared.getStarWarsPeoplle { result in
+            
+        }
+        
+      
        
     }
 

@@ -12,12 +12,14 @@ final class APICaller {
     static let shared = APICaller()
     
     struct Constants {
-        static let starWarsPeople = URL(string: "https://swapi.dev/api/people/")
+        static let starWarsPeople = URL(string: "https://starwarsdon.herokuapp.com/people/")
+        
+        static let searchURLString =  "https://api.stackexchange.com/2.2/questions?pagesize=20&order=desc&sort=activity&site=stackoverflow&filter=withbody&tagged="
     }
     
     private init(){}
     
-    public func getStarWarsPeoplle(completion: @escaping (Swift.Result<[Result], Error>) -> Void) {
+    public func getStarWarsPeople(completion: @escaping (Swift.Result<[Result], Error>) -> Void) {
         guard let url = Constants.starWarsPeople else {
             return
         }
@@ -44,5 +46,11 @@ final class APICaller {
         
         task.resume()
     }
+    
+    
+    
+    
+    
+    
     
 }

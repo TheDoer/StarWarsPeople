@@ -7,17 +7,6 @@
 
 import UIKit
 
-class PeopleTableViewCellViewModel {
-    // a class as oppossed to a struct because we want to modify stuff in there
-    // class are reference types
-    
-    let name: String
-    init (name: String){
-        self.name = name
-    }
-    
-}
-
 class PeopleTableViewCell: UITableViewCell {
     static let identifier = "PeopleTableViewCell"
     
@@ -41,8 +30,8 @@ class PeopleTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        nameLabel.frame = CGRect(x: 10,
-                                 y: 0,
+        nameLabel.frame = CGRect(x: 20,
+                                 y: 15,
                                  width: contentView.frame.size.width - 120,
                                  height: contentView.frame.size.height/2)
     }

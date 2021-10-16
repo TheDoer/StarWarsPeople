@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UISearchBarDelegate {
     
     private let tableView: UITableView = {
         let table = UITableView()
@@ -17,7 +17,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         return table
     }()
-    
+    private let searchVC = UISearchController(searchResultsController: nil)
     private var viewModels = [PeopleTableViewCellViewModel]()
 
     override func viewDidLoad() {
@@ -26,7 +26,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorColor = .clear
         
+        starWarsPeopleList()
+        createSearchBar()
+    }
+    
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.bounds
+    }
+    
+    func createSearchBar(){
+        navigationItem.searchController = searchVC
+        searchVC.searchBar.delegate = self
+    }
+    
+    
+    //function to populate star wars people on the table view
+    func starWarsPeopleList(){
         APICaller.shared.getStarWarsPeople { [weak self] result in
             switch result {
                 case .success(let people):
@@ -45,17 +64,37 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     
             }
         }
-    
-      
     }
     
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
+    // Search star wars people by name
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let text = searchBar.text, !text.isEmpty else {
+            return
+        }
+        APICaller.shared.searchWithName(with: text) { [weak self] result in
+            switch result {
+                case .success(let people):
+                    
+                    self?.viewModels = people.compactMap({ PeopleTableViewCellViewModel(name: $0.name!
+                    )
+                })
+                    
+                    DispatchQueue.main.async {
+                        self?.tableView.reloadData()
+                        self?.searchVC.dismiss(animated: true, completion: nil)
+
+                    }
+                case .failure( let error):
+                    print(error)
+                    
+            }
+        }
     }
     
-    //TableView
+}
+
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return  viewModels.count
@@ -79,10 +118,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 150
+        return 100
     }
     
-
-
 }
-

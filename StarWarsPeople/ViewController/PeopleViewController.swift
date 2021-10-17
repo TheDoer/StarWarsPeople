@@ -8,22 +8,45 @@
 import UIKit
 
 class PeopleViewController: UIViewController {
-
+    
+    var personInfo:Result!
+    
+    
+    
+    //@IBOutlet weak var personNameLbl: UILabel!
+    
+    @IBOutlet weak var heightLbl: UILabel!
+    @IBOutlet weak var massLbl: UILabel!
+    @IBOutlet weak var hairColorLbl: UILabel!
+    @IBOutlet weak var eyeColorLbl: UILabel!
+    @IBOutlet weak var skinColorLbl: UILabel!
+    @IBOutlet weak var birthYearLbl: UILabel!
+    @IBOutlet weak var genderLbl: UILabel!
+    @IBOutlet weak var homeworldLbl: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        setUpView()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    
+    func setUpView(){
+        
+        title = "\(personInfo.name!)'s"
+        
+        heightLbl.text = "Height: \(personInfo.height!)"
+        massLbl.text = "Mass: \(personInfo.mass!)"
+        hairColorLbl.text = "Hair Color: \(personInfo.hair_color!)"
+        eyeColorLbl.text = "Eye Color: \(personInfo.eye_color!)"
+        skinColorLbl.text = "Skin Color: \(personInfo.skin_color!)"
+        birthYearLbl.text = "Birth Year: \(personInfo.birth_year!)"
+        genderLbl.text = "Gender: \(personInfo.gender!)"
+        homeworldLbl.text = "HW: \(personInfo.homeworld!)"
+        
     }
-    */
+
+    
 
 }

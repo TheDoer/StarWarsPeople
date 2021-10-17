@@ -7,7 +7,8 @@
 
 import Foundation
 
+
 struct Constants {
-    static let starWarsPeople = URL(string: "https://starwarsdon.herokuapp.com/people/")
-    static let searchURLString =  "https://starwarsdon.herokuapp.com/people/?name="
+    static let starWarsPeople = URL(string: "https://swapi.dev/api/people/")
+    static let searchURLString =  "https://swapi.dev/api/people/?search="
 }

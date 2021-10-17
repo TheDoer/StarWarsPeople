@@ -9,12 +9,13 @@ import UIKit
 
 class ViewController: UIViewController, UISearchBarDelegate {
     
+    var activityView: UIActivityIndicatorView?
+    private var personDetails = [Result]()
+    
     private let tableView: UITableView = {
         let table = UITableView()
         table.register(PeopleTableViewCell.self,
                        forCellReuseIdentifier: PeopleTableViewCell.identifier)
-        
-        
         return table
     }()
     private let searchVC = UISearchController(searchResultsController: nil)
@@ -32,6 +33,19 @@ class ViewController: UIViewController, UISearchBarDelegate {
         createSearchBar()
     }
     
+    func showActivityIndicator() {
+       activityView = UIActivityIndicatorView(style: .large)
+        activityView!.center = self.view.center
+        self.view.addSubview(activityView!)
+        activityView!.startAnimating()
+    }
+    
+    func hideActivityIndicator(){
+        if ( activityView != nil){
+            activityView?.stopAnimating()
+        }
+    }
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -46,6 +60,7 @@ class ViewController: UIViewController, UISearchBarDelegate {
     
     //function to populate star wars people on the table view
     func starWarsPeopleList(){
+        showActivityIndicator()
         APICaller.shared.getStarWarsPeople { [weak self] result in
             switch result {
                 case .success(let people):
@@ -53,21 +68,31 @@ class ViewController: UIViewController, UISearchBarDelegate {
                         PeopleTableViewCellViewModel(
                             name: $0.name!
                         )
+                        
                     })
                     
+                    people.forEach { details in
+                        self?.personDetails.append(Result(name: details.name, height: details.height, mass: details.mass, hair_color: details.hair_color, skin_color: details.skin_color, eye_color: details.eye_color, birth_year: details.birth_year, gender: details.gender, homeworld: details.homeworld))
+                    }
+                    
                     DispatchQueue.main.async {
+                        self!.hideActivityIndicator()
                         self?.tableView.reloadData()
+                        
                     }
                     
                 case .failure(let error):
                     print(error)
+                    self!.hideActivityIndicator()
                     
             }
         }
+        
     }
     
     // Search star wars people by name
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        showActivityIndicator()
         guard let text = searchBar.text, !text.isEmpty else {
             return
         }
@@ -80,12 +105,14 @@ class ViewController: UIViewController, UISearchBarDelegate {
                 })
                     
                     DispatchQueue.main.async {
+                        self!.hideActivityIndicator()
                         self?.tableView.reloadData()
                         self?.searchVC.dismiss(animated: true, completion: nil)
 
                     }
                 case .failure( let error):
                     print(error)
+                    self!.hideActivityIndicator()
                     
             }
         }
@@ -115,6 +142,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let selectedPerson = personDetails[indexPath.row]
+        
+        if let viewController = UIStoryboard(name: "PeopleDetails", bundle: nil).instantiateViewController(identifier: "PeopleViewController") as? PeopleViewController {
+         viewController.personInfo = selectedPerson
+                navigationController?.pushViewController(viewController, animated: true)
+            }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

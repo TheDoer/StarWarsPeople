@@ -21,22 +21,10 @@ struct Result: Codable {
     let name: String?
     let height: String?
     let mass: String?
-    let hairColor: String?
-    let skinColor: String?
-    let eyeColor: String?
-    let birthYear: String?
+    let hair_color: String?
+    let skin_color: String?
+    let eye_color: String?
+    let birth_year: String?
     let gender: String?
     let homeworld: String?
-
-    enum CodingKeys: String, CodingKey {
-        case name
-        case height
-        case mass
-        case hairColor
-        case skinColor
-        case eyeColor
-        case birthYear
-        case gender
-        case homeworld
-    }
 }
